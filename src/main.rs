@@ -58,10 +58,12 @@ async fn main() -> anyhow::Result<()> {
         ConfigBuilder::new()
             .with_tcp(TcpConfig {
                 listen_addresses: Vec::new(),
+                nodelay: true,
                 ..Default::default()
             })
             .with_websocket(WsConfig {
                 listen_addresses: Vec::new(),
+                nodelay: true,
                 ..Default::default()
             })
             .with_libp2p_bitswap(bitswap_config)
