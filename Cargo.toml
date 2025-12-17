@@ -11,3 +11,6 @@ futures = "0.3.31"
 litep2p = { git = "https://github.com/paritytech/litep2p.git", branch = "dm-bitswap-client", features = ["websocket", "rsa"] }
 log = "0.4.29"
 tokio = { version = "1.48.0", features = ["macros", "rt-multi-thread", "time"] }
+tracing = "0.1.43"
+tracing-log = "0.2.0"
+tracing-subscriber = { version = "0.3.22", features = ["env-filter"] }

@@ -20,6 +20,8 @@ use std::{
     time::{Duration, Instant},
 };
 use tokio::time::sleep;
+use tracing_log::LogTracer;
+use tracing_subscriber::{EnvFilter, filter::LevelFilter, fmt, prelude::*};
 
 /// Operation timeout
 const TIMEOUT: Duration = Duration::from_secs(10);
@@ -42,7 +44,7 @@ pub struct Args {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info")).init();
+    setup_logging()?;
 
     let Args {
         address,
@@ -229,4 +231,20 @@ async fn main() -> anyhow::Result<()> {
     info!("RPS: {:.0}", rps);
 
     Ok(())
+}
+
+fn setup_logging() -> anyhow::Result<()> {
+    LogTracer::init().context("Failed to initialize `log` tracer")?;
+
+    let env_filter = EnvFilter::builder()
+        .with_default_directive(LevelFilter::INFO.into())
+        .from_env()
+        .context("Failed to parse env log filter")?;
+
+    let subscriber = tracing_subscriber::registry()
+        .with(env_filter)
+        .with(fmt::layer());
+
+    tracing::subscriber::set_global_default(subscriber)
+        .context("Failed to set global tracing subscriber")
 }
